@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine's Proposal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #ff4081;
+        --secondary-color: #f50057;
+        --background-color: #ffe4e1;
+        --text-color: #333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, var(--background-color), #ffc0cb);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        padding: 40px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .title {
+        color: var(--secondary-color);
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+
+      #nameInput {
+        width: 100%;
+        padding: 12px;
+        margin: 15px 0;
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        font-size: 16px;
+      }
+
+      .btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background: var(--secondary-color);
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+      }
+
+      #questionContainer {
+        display: none;
+      }
+
+      .question {
+        margin: 20px 0;
+        font-size: 18px;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .option {
+        background: white;
+        border: 2px solid var(--primary-color);
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .option:hover {
+        background: var(--primary-color);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="bgMusic" loop>
+      <source src="/romantic.mp3" type="audio/mpeg" />
+    </audio>
+    <div class="container">
+      <div id="startSection">
+        <h1 class="title">Valentine's Special 💕</h1>
+        <input type="text" id="nameInput" placeholder="Enter Their Name" />
+        <button class="btn" onclick="start()">Begin Journey</button>
+      </div>
+      <div id="questionContainer"></div>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          text: "Do you believe in magical moments? ✨",
+          options: ["Absolutely!", "Sometimes", "Not really"],
+        },
+        {
+          text: "Have you ever dreamed of a perfect date? 💫",
+          options: ["Yes!", "Maybe", "Not sure"],
+        },
+        {
+          text: "Ready for something special? 💝",
+          options: ["Can't wait!", "Tell me more", "I'm nervous"],
+        },
+      ];
+
+      let currentQuestion = 0;
+
+      function start() {
+        const name = document.getElementById("nameInput").value.trim();
+        if (!name) {
+          alert("Please enter a name");
+          return;
+        }
+        document.getElementById("startSection").style.display = "none";
+        document.getElementById("questionContainer").style.display = "block";
+        document.getElementById("bgMusic").play();
+        showQuestion();
+      }
+
+      function showQuestion() {
+        if (currentQuestion >= questions.length) {
+          showFinal();
+          return;
+        }
+
+        const q = questions[currentQuestion];
+        document.getElementById("questionContainer").innerHTML = `
+                <div class="question">${q.text}</div>
+                <div class="options">
+                    ${q.options
+                      .map(
+                        (opt) => `
+                        <button class="option" onclick="nextQuestion()">${opt}</button>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+      }
+
+      function nextQuestion() {
+        currentQuestion++;
+        showQuestion();
+      }
+
+      function showFinal() {
+        const name = document.getElementById("nameInput").value;
+        document.getElementById("questionContainer").innerHTML = `
+                <div class="question">Hey ${name}, will you be my Valentine? 💖</div>
+                <div class="options">
+                    <button class="option" onclick="handleAnswer(true)">Yes! 💝</button>
+                    <button class="option" onclick="handleAnswer(false)">Maybe next time 🌸</button>
+                </div>
+            `;
+      }
+
+      function handleAnswer(accepted) {
+        const name = document.getElementById("nameInput").value;
+        const message = accepted
+          ? `Happy Valentine's Day, my love! ❤️ Every moment with you feels like a beautiful dream. Your love fills my heart with joy, and I’m grateful for you every day. I promise to cherish you, love you, and stand by your side always. You’re my everything. 💖, ${name} Darling! 💖`
+          : `Even though you don’t feel the same, my feelings were real, and they still are. No hard feelings—just gratitude for knowing you. Wishing you happiness, always. ❤️, ${name}. 🤍`;
+        document.getElementById("questionContainer").innerHTML = `
+                <div class="question">${message}</div>
+                <button class="btn" onclick="location.reload()">Start Over</button>
+            `;
+      }
+    </script>
+  </body>
+</html>
